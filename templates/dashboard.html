@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dispositivos Registrados</h2>
+<table>
+    <tr>
+        <th>IP</th>
+        <th>Serial</th>
+        <th>Tipo</th>
+        <th>Estado</th>
+    </tr>
+    {% for d in devices %}
+    <tr>
+        <td>{{ d.dev_ip_address }}</td>
+        <td>{{ d.dev_serial_number }}</td>
+        <td>{{ d.dev_type }}</td>
+        <td>{{ d.dev_status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
