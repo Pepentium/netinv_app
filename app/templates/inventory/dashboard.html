@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - NetInv{% endblock %}
+
+{% block content %}
+<h2>Resumen del Inventario</h2>
+
+<div class="stats">
+    <div class="stat-card">
+        <h3>Dispositivos Totales</h3>
+        <p>{{ summary.total_devices }}</p>
+    </div>
+    
+    <div class="stat-card">
+        <h3>Por Estado</h3>
+        <ul>
+            {% for status, count in summary.by_status %}
+                <li>{{ status|capitalize }}: {{ count }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="stat-card">
+        <h3>Por Tipo</h3>
+        <ul>
+            {% for type, count in summary.by_type %}
+                <li>{{ type|capitalize }}: {{ count }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
