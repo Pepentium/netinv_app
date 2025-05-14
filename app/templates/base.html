@@ -12,6 +12,10 @@
 
 <body>
     {% if show_sidebar is not defined or show_sidebar %}
+    <!-- Botón de menú (Hamburger) - Visible solo en móviles -->
+    <button class="sidebar-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
     <div class="layout">
         <!-- Sidebar -->
         <div class="sidebar">
@@ -45,7 +49,7 @@
             <div class="sidebar-footer">
                 {% if current_user.is_authenticated %}
                 <a href="{{ url_for('auth.logout') }}" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
+                    <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>
                     <span>Cerrar sesión</span>
                 </a>
                 {% endif %}
@@ -56,8 +60,9 @@
             <header class="topbar">
                 <div class="user-info">
                     {% if current_user.is_authenticated %}
-                    <span>{{ current_user.usr_name }}</span>
-                    <i class="fas fa-user-circle"></i>
+                    <div class="profile-circle">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
                     {% endif %}
                 </div>
             </header>
@@ -72,31 +77,63 @@
                 </ul>
                 {% endif %} {% endwith %} {% block content %}{% endblock %}
             </main>
-
-
             {% if show_sidebar is not defined or show_sidebar %}
         </div> <!-- Cierre de main-content -->
     </div> <!-- Cierre de layout -->
     {% endif %}
 
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-    {% block js %}{% endblock %}
-
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Toggle submenus (si existen)
-            const hasSubmenu = document.querySelectorAll(".has-submenu > a");
-            hasSubmenu.forEach((item) => {
-                item.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    const submenu = this.nextElementSibling;
-                    submenu.style.display =
-                        submenu.style.display === "block" ? "none" : "block";
-                    this.querySelector(".fa-chevron-down")?.classList.toggle("rotate");
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const mainContent = document.querySelector('.main-content');
+
+            // Estado inicial (para móviles)
+            if (window.innerWidth <= 768) {
+                sidebar.classList.add('collapsed');
+            }
+
+            // Toggle del sidebar
+            sidebarToggle.addEventListener('click', function () {
+                sidebar.classList.toggle('collapsed');
+
+                // Opcional: Deshabilitar scroll del body cuando el sidebar está abierto
+                document.body.style.overflow = sidebar.classList.contains('collapsed') ? 'auto' : 'hidden';
+            });
+
+            // Cerrar sidebar al hacer clic en un enlace (en móviles)
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.add('collapsed');
+                        document.body.style.overflow = 'auto';
+                    }
                 });
+            });
+
+            // Cerrar sidebar al hacer clic fuera de él (en móviles)
+            mainContent.addEventListener('click', function () {
+                if (window.innerWidth <= 768 && !sidebar.classList.contains('collapsed')) {
+                    sidebar.classList.add('collapsed');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            // Manejar cambios de tamaño de pantalla
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('collapsed');
+                    document.body.style.overflow = 'auto';
+                } else {
+                    sidebar.classList.add('collapsed');
+                }
             });
         });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {% block js %}{% endblock %}
 </body>
 
 </html>

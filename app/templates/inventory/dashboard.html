@@ -13,12 +13,10 @@
 
     <div class="stat-card">
         <h3>Dispositivos por Estado</h3>
+
         <table class="stat-table">
             <thead>
-                <tr>
-                    <th>Estado</th>
-                    <th>Cantidad</th>
-                </tr>
+                <tr><th>Estado</th><th>Cantidad</th></tr>
             </thead>
             <tbody>
                 {% for status, count in summary.by_status %}
@@ -29,16 +27,22 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        {% with chart_id=chart_status.chart_id,
+                labels=chart_status.labels,
+                values=chart_status.values,
+                dataset_label=chart_status.label,
+                chart_type="bar" %}
+            {% include "inventory/chart.html" %}
+        {% endwith %}
     </div>
 
     <div class="stat-card">
         <h3>Dispositivos por Tipo</h3>
+
         <table class="stat-table">
             <thead>
-                <tr>
-                    <th>Tipo</th>
-                    <th>Cantidad</th>
-                </tr>
+                <tr><th>Tipo</th><th>Cantidad</th></tr>
             </thead>
             <tbody>
                 {% for type, count in summary.by_type %}
@@ -49,6 +53,40 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        {% with chart_id=chart_type.chart_id,
+                labels=chart_type.labels,
+                values=chart_type.values,
+                dataset_label=chart_type.label,
+                chart_type="doughnut" %}
+            {% include "inventory/chart.html" %}
+        {% endwith %}
+    </div>
+
+    <div class="stat-card">
+        <h3>Dispositivos por Rack</h3>
+
+        <table class="stat-table">
+            <thead>
+                <tr><th>Rack</th><th>Cantidad</th></tr>
+            </thead>
+            <tbody>
+                {% for rack, count in summary.by_rack %}
+                    <tr>
+                        <td>{{ rack }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% with chart_id=chart_rack.chart_id,
+                labels=chart_rack.labels,
+                values=chart_rack.values,
+                dataset_label=chart_rack.label,
+                chart_type="bar" %}
+            {% include "inventory/chart.html" %}
+        {% endwith %}
     </div>
 </div>
 {% endblock %}

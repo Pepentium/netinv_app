@@ -99,6 +99,8 @@ class Model(db.Model):
     mdl_ports = db.Column('mdl_ports', db.Integer)
     mdl_description = db.Column('mdl_description', db.Text)
 
+from sqlalchemy.ext.hybrid import hybrid_property
+
 class Device(db.Model):
     __tablename__ = 'tbl_devices'
     
@@ -109,6 +111,36 @@ class Device(db.Model):
     mdl_id = db.Column('mdl_id', db.Integer, db.ForeignKey('tbl_models.mdl_id'), nullable=False)
     rck_id = db.Column('rck_id', db.Integer, db.ForeignKey('tbl_racks.rck_id'), nullable=False)
     dev_status = db.Column('dev_status', db.Enum('activo', 'inactivo', 'mantenimiento'), default='activo')
-    
+
+    # Relaciones
     model = db.relationship('Model', backref='devices')
     rack = db.relationship('Rack', backref='devices')
+
+    # Propiedades para acceder a campos relacionados
+    @hybrid_property
+    def mdl_name(self):
+        return self.model.mdl_name if self.model else None
+
+    @hybrid_property
+    def mdl_manufacturer(self):
+        return self.model.mdl_manufacturer if self.model else None
+
+    @hybrid_property
+    def mdl_ports(self):
+        return self.model.mdl_ports if self.model else None
+
+    @hybrid_property
+    def mdl_description(self):
+        return self.model.mdl_description if self.model else None
+
+    @hybrid_property
+    def rck_name(self):
+        return self.rack.rck_name if self.rack else None
+
+    @hybrid_property
+    def loc_building_name(self):
+        return self.rack.location.loc_building_name if self.rack and self.rack.location else None
+
+    @hybrid_property
+    def loc_detail(self):
+        return self.rack.location.loc_detail if self.rack and self.rack.location else None

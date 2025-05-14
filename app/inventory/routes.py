@@ -14,13 +14,56 @@ inventory_bp = Blueprint('inventory', __name__)
 @login_required
 def dashboard():
     summary = get_devices_summary()
-    return render_template('inventory/dashboard.html', summary=summary)
+
+    chart_status = {
+        "labels": [status.capitalize() for status, _ in summary["by_status"]],
+        "values": [count for _, count in summary["by_status"]],
+        "label": "Dispositivos por Estado",
+        "chart_id": "statusChart"
+    }
+
+    chart_type = {
+        "labels": [dev_type.capitalize() for dev_type, _ in summary["by_type"]],
+        "values": [count for _, count in summary["by_type"]],
+        "label": "Dispositivos por Tipo",
+        "chart_id": "typeChart"
+    }
+
+    chart_rack = {
+        "labels": [rack for rack, _ in summary["by_rack"]],
+        "values": [count for _, count in summary["by_rack"]],
+        "label": "Dispositivos por Rack",
+        "chart_id": "rackChart"
+    }
+
+    return render_template(
+        "inventory/dashboard.html",
+        summary=summary,
+        chart_status=chart_status,
+        chart_type=chart_type,
+        chart_rack=chart_rack
+    )
 
 @inventory_bp.route('/devices')
 @login_required
 def devices():
     devices = Device.query.all()
-    return render_template('inventory/devices.html', devices=devices)
+
+    table_headers = [
+        'IP',
+        'Serial',
+        'Tipo',
+        'Estado',
+        'Modelo',
+        'Fabricante',
+        'Puertos',
+        'Descripción',
+        'Rack',
+        'Edificio',
+        'Detalle'
+    ]
+
+    return render_template('inventory/devices.html', devices=devices, table_headers=table_headers)
 
 @inventory_bp.route('/ip-check', methods=['GET', 'POST'])
 @login_required
