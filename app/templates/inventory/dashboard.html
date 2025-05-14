@@ -3,30 +3,52 @@
 {% block title %}Dashboard - NetInv{% endblock %}
 
 {% block content %}
-<h2>Resumen del Inventario</h2>
+<h2 class="dashboard-title">Resumen del Inventario</h2>
 
-<div class="stats">
-    <div class="stat-card">
+<div class="stats-grid">
+    <div class="stat-card total">
         <h3>Dispositivos Totales</h3>
-        <p>{{ summary.total_devices }}</p>
+        <p class="stat-value">{{ summary.total_devices }}</p>
     </div>
-    
+
     <div class="stat-card">
-        <h3>Por Estado</h3>
-        <ul>
-            {% for status, count in summary.by_status %}
-                <li>{{ status|capitalize }}: {{ count }}</li>
-            {% endfor %}
-        </ul>
+        <h3>Dispositivos por Estado</h3>
+        <table class="stat-table">
+            <thead>
+                <tr>
+                    <th>Estado</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for status, count in summary.by_status %}
+                    <tr>
+                        <td>{{ status|capitalize }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    
+
     <div class="stat-card">
-        <h3>Por Tipo</h3>
-        <ul>
-            {% for type, count in summary.by_type %}
-                <li>{{ type|capitalize }}: {{ count }}</li>
-            {% endfor %}
-        </ul>
+        <h3>Dispositivos por Tipo</h3>
+        <table class="stat-table">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for type, count in summary.by_type %}
+                    <tr>
+                        <td>{{ type|capitalize }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}
