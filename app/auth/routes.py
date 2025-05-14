@@ -18,7 +18,7 @@ def login():
         user = User.query.filter_by(usr_name=username).first()
         
         if not user or not user.check_password(password):
-            flash('Usuario o contraseña incorrectos', 'danger')
+            flash('🔐 Usuario o contraseña incorrectos', 'error')
             return redirect(url_for('auth.login'))
         
         login_user(user)
@@ -39,11 +39,11 @@ def register():
         password = request.form.get('password')
         
         if User.query.filter_by(usr_name=username).first():
-            flash('El usuario ya existe', 'danger')
+            flash('🔐 El usuario ya existe', 'error')
             return redirect(url_for('auth.register'))
         
         create_user(username, password)
-        flash('Usuario registrado correctamente', 'success')
+        flash('🔐 Usuario registrado correctamente', 'success')
         return redirect(url_for('auth.login'))
     
     return render_template('auth/register.html')

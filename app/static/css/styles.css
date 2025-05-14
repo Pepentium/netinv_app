@@ -5,7 +5,7 @@ body {
     padding: 0;
     min-height: 100vh;
     color: #333;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
 /* Estilo específico para páginas de login/registro */
@@ -135,9 +135,15 @@ a:hover {
 .flashes .success {
     background-color: #d4edda;
     color: #155724;
+    max-width: 300px;
+    margin: 1rem auto;
+    padding: 1 1rem;
 }
 
 .flashes .error {
     background-color: #f8d7da;
     color: #721c24;
+    max-width: 300px;
+    margin: 1rem auto;
+    padding: 1 1rem;
 }

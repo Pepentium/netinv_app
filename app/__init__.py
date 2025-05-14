@@ -15,7 +15,10 @@ def create_app():
     # Inicializar extensiones con la app
     db.init_app(app)
     login_manager.init_app(app)
+    
+    # Configuración de Flask-Login
     login_manager.login_view = 'auth.login'
+    login_manager.login_message = "🔐 Por favor inicia sesión para acceder a esta página."  # Mensaje personalizado
     
     # Importar blueprints aquí para evitar importaciones circulares
     from app.auth.routes import auth_bp
