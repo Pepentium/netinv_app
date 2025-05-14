@@ -1,4 +1,4 @@
-from werkzeug.security import generate_password_hash, check_password_hash  # Añade esta línea
+from werkzeug.security import generate_password_hash
 from app.models import User
 from app import db, login_manager
 
