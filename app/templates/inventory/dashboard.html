@@ -5,6 +5,17 @@
 {% block content %}
 <h2 class="dashboard-title">Resumen del Inventario</h2>
 
+<!-- Gráfico general centrado y por encima del grid -->
+<div class="chart-wrapper">
+    {% with chart_id=chart_overview.chart_id,
+            labels=chart_overview.labels,
+            values=chart_overview.values,
+            dataset_label=chart_overview.label,
+            chart_type="bar" %}
+        {% include "inventory/chart.html" %}
+    {% endwith %}
+</div>
+
 <div class="stats-grid">
     <div class="stat-card total">
         <h3>Dispositivos Totales</h3>
@@ -13,7 +24,6 @@
 
     <div class="stat-card">
         <h3>Dispositivos por Estado</h3>
-
         <table class="stat-table">
             <thead>
                 <tr><th>Estado</th><th>Cantidad</th></tr>
@@ -27,19 +37,10 @@
                 {% endfor %}
             </tbody>
         </table>
-
-        {% with chart_id=chart_status.chart_id,
-                labels=chart_status.labels,
-                values=chart_status.values,
-                dataset_label=chart_status.label,
-                chart_type="bar" %}
-            {% include "inventory/chart.html" %}
-        {% endwith %}
     </div>
 
     <div class="stat-card">
         <h3>Dispositivos por Tipo</h3>
-
         <table class="stat-table">
             <thead>
                 <tr><th>Tipo</th><th>Cantidad</th></tr>
@@ -53,19 +54,10 @@
                 {% endfor %}
             </tbody>
         </table>
-
-        {% with chart_id=chart_type.chart_id,
-                labels=chart_type.labels,
-                values=chart_type.values,
-                dataset_label=chart_type.label,
-                chart_type="doughnut" %}
-            {% include "inventory/chart.html" %}
-        {% endwith %}
     </div>
 
     <div class="stat-card">
         <h3>Dispositivos por Rack</h3>
-
         <table class="stat-table">
             <thead>
                 <tr><th>Rack</th><th>Cantidad</th></tr>
@@ -79,14 +71,6 @@
                 {% endfor %}
             </tbody>
         </table>
-
-        {% with chart_id=chart_rack.chart_id,
-                labels=chart_rack.labels,
-                values=chart_rack.values,
-                dataset_label=chart_rack.label,
-                chart_type="bar" %}
-            {% include "inventory/chart.html" %}
-        {% endwith %}
     </div>
 </div>
 {% endblock %}
