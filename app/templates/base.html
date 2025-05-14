@@ -6,30 +6,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}NetInv{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {% block css %}{% endblock %}
 </head>
 
 <body>
-    <header>
-        <h1>NetInv - Inventario de Red</h1>
-        {% if current_user.is_authenticated %}
-        <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
-        {% endif %}
-    </header>
+    {% if show_sidebar is not defined or show_sidebar %}
+    <div class="layout">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1><i class="fas fa-network-wired"></i> NetInv</h1>
+            </div>
 
-    <main>
-        {% with messages = get_flashed_messages(with_categories=true) %} {% if
-        messages %}
-        <ul class="flashes">
-            {% for category, message in messages %}
-            <li class="{{ category }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %} {% endwith %} {% block content %}{% endblock %}
-    </main>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item {% if request.endpoint == 'inventory.dashboard' %}active{% endif %}">
+                        <a href="{{ url_for('inventory.dashboard') }}">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.endpoint == 'inventory.devices' %}active{% endif %}">
+                        <a href="{{ url_for('inventory.devices') }}">
+                            <i class="fas fa-server"></i>
+                            <span>Dispositivos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.endpoint == 'inventory.ip_check' %}active{% endif %}">
+                        <a href="{{ url_for('inventory.ip_check') }}">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <span>Gestión de IPs</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('auth.logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Cerrar sesión</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <header class="topbar">
+                <div class="user-info">
+                    {% if current_user.is_authenticated %}
+                    <span>{{ current_user.usr_name }}</span>
+                    <i class="fas fa-user-circle"></i>
+                    {% endif %}
+                </div>
+            </header>
+            {% endif %}
+            <main>
+                {% with messages = get_flashed_messages(with_categories=true) %} {% if
+                messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %} {% endwith %} {% block content %}{% endblock %}
+            </main>
+
+
+            {% if show_sidebar is not defined or show_sidebar %}
+        </div> <!-- Cierre de main-content -->
+    </div> <!-- Cierre de layout -->
+    {% endif %}
 
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
     {% block js %}{% endblock %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Toggle submenus (si existen)
+            const hasSubmenu = document.querySelectorAll(".has-submenu > a");
+            hasSubmenu.forEach((item) => {
+                item.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const submenu = this.nextElementSibling;
+                    submenu.style.display =
+                        submenu.style.display === "block" ? "none" : "block";
+                    this.querySelector(".fa-chevron-down")?.classList.toggle("rotate");
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
