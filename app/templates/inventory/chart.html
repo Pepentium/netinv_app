@@ -1,21 +1,52 @@
-<canvas id="myChart"></canvas>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% set colors = ['#4CAF50', '#FFC107', '#F44336', '#2196F3'] %}
+
+<canvas id="overviewChart"></canvas>
+
 <script>
-    const ctx = document.getElementById('myChart');
-    new Chart(ctx, {
+    const ctx = document.getElementById('overviewChart').getContext('2d');
+
+    const data = {
+        labels: [
+            {% for item in chart_overview %}
+                "{{ item.label }}"{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ],
+        datasets: [{
+            label: "Resumen de Inventario",
+            data: [
+                {% for item in chart_overview %}
+                    {{ item.value }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ],
+            backgroundColor: [
+                {% for item in chart_overview %}
+                    "{{ colors[loop.index0 % colors|length] }}"{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    const config = {
         type: 'bar',
-        data: {
-            labels: ['Activo', 'Inactivo', 'Mantenimiento'],
-            datasets: [{
-                label: 'Cantidad',
-                data: [2, 3, 4],
-            }]
-        },
+        data: data,
         options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true
+                }
+            },
             scales: {
-                x: { title: { display: true, text: 'Estado' } },
-                y: { title: { display: true, text: 'Cantidad' } }
+                y: {
+                    beginAtZero: true
+                }
             }
         }
-    });
+    };
+
+    new Chart(ctx, config);
 </script>

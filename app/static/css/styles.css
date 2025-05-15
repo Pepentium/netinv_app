@@ -457,3 +457,33 @@ main {
         margin-top: 20px;
         position: relative;
     }
+
+    .form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.column {
+    flex: 1 1 45%;
+    min-width: 300px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control, .custom-select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.custom-select {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+

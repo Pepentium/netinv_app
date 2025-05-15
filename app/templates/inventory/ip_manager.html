@@ -2,22 +2,61 @@
 {% block title %}Gestión de IPs | NetInv{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Agregar Nuevo Dispositivo</h2>
+<h2 class="dashboard-title">Agregar Nuevo Dispositivo</h2>
+<div>
     <form method="POST">
         {{ form.hidden_tag() }}
-        
-        <div class="form-group">{{ form.ip_address.label }} {{ form.ip_address(class="form-control") }}</div>
-        <div class="form-group">{{ form.serial_number.label }} {{ form.serial_number(class="form-control") }}</div>
-        <div class="form-group">{{ form.device_type.label }} {{ form.device_type(class="form-control") }}</div>
-        <div class="form-group">{{ form.building.label }} {{ form.building(class="form-control") }}</div>
-        <div class="form-group">{{ form.rack.label }} {{ form.rack(class="form-control") }}</div>
-        <div class="form-group">{{ form.model.label }} {{ form.model(class="form-control") }}</div>
-        <div class="form-group">{{ form.manufacturer.label }} {{ form.manufacturer(class="form-control") }}</div>
-        <div class="form-group">{{ form.ports.label }} {{ form.ports(class="form-control") }}</div>
-        <div class="form-group">{{ form.description.label }} {{ form.description(class="form-control") }}</div>
-        
-        <button type="submit" class="btn btn-primary">Guardar</button>
+
+        <div class="stats-grid">
+            <!-- Columna izquierda -->
+            <div class="stat-card">
+                <div class="form-group">
+                    {{ form.ip_address.label }}
+                    {{ form.ip_address(class="custom-select") }}
+                </div>
+                <div class="form-group">
+                    {{ form.serial_number.label }}
+                    {{ form.serial_number(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.building.label }}
+                    {{ form.building(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.rack.label }}
+                    {{ form.rack(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.model.label }}
+                    {{ form.model(class="form-control") }}
+                </div>
+            </div>
+
+            <!-- Columna derecha -->
+            <div class="stat-card">
+                <div class="form-group">
+                    {{ form.manufacturer.label }}
+                    {{ form.manufacturer(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.ports.label }}
+                    {{ form.ports(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.description.label }}
+                    {{ form.description(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.device_type.label }}
+                    {{ form.device_type(class="custom-select") }}
+                </div>
+            </div>
+
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button type="submit">Guardar</button>
+        </div>
     </form>
 </div>
 {% endblock %}
