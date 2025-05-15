@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required
 from app.models import Device, Rack, Location, Model
-from app.inventory.utils import is_ip_available, get_devices_summary
+from app.inventory.utils import is_ip_available, get_devices_summary, get_devices_chart_data
 from app import db
 from ipaddress import IPv4Network
 from app.inventory.forms import DeviceForm
@@ -14,19 +14,9 @@ inventory_bp = Blueprint('inventory', __name__)
 @login_required
 def dashboard():
     summary = get_devices_summary()
+    chart_overview = get_devices_chart_data()
+    return render_template("inventory/dashboard.html", summary=summary, chart_overview=chart_overview)
 
-    chart_overview = {
-        "labels": [dev_type.capitalize() for dev_type, _ in summary["by_type"]],
-        "values": [count for _, count in summary["by_type"]],
-        "label": "Resumen General por Tipo de Dispositivo",
-        "chart_id": "overviewChart"
-    }
-
-    return render_template(
-        "inventory/dashboard.html",
-        summary=summary,
-    chart_overview=chart_overview
-    )
 
 @inventory_bp.route('/devices')
 @login_required
@@ -48,21 +38,34 @@ def devices():
     ]
 
     return render_template('inventory/devices.html', devices=devices, table_headers=table_headers)
-
 @inventory_bp.route('/ip-check', methods=['GET', 'POST'])
 @login_required
 def ip_check():
     form = DeviceForm()
+
     form.ip_address.choices = [(ip, ip) for ip in get_available_ips()]
-    
+    form.building.choices = [(loc.loc_id, loc.loc_building_name) for loc in Location.query.all()]
+    form.rack.choices = [(rack.rck_id, rack.rck_name) for rack in Rack.query.all()]
+    form.model.choices = [(model.mdl_id, model.mdl_name) for model in Model.query.all()]
+
     if form.validate_on_submit():
-        ip_address = form.ip_address.data
-        if is_ip_available(ip_address):
-            flash(f'La IP {ip_address} está disponible', 'success')
+        if not is_ip_available(form.ip_address.data):
+            flash(f'La IP {form.ip_address.data} ya está en uso', 'error')
         else:
-            flash(f'La IP {ip_address} ya está en uso', 'error')
-    
+            device = Device(
+                dev_ip_address=form.ip_address.data,
+                dev_serial_number=form.serial_number.data,
+                dev_type=form.device_type.data,
+                mdl_id=form.model.data,
+                rck_id=form.rack.data
+            )
+            db.session.add(device)
+            db.session.commit()
+            flash('Dispositivo registrado con éxito', 'success')
+            return redirect(url_for('inventory.ip_check'))
+
     return render_template('inventory/ip_manager.html', form=form)
+
 
 # --- Nueva funcionalidad ---
 def get_available_ips():
@@ -76,72 +79,3 @@ def get_available_ips():
         and str(host) != '192.168.20.1'  # Excluye la IP gateway
     ]
 
-@inventory_bp.route('/add-device', methods=['GET', 'POST'])
-@login_required
-def add_device():
-    if request.method == 'POST':
-        try:
-            # Obtener datos del formulario
-            building = request.form.get('building')
-            rack = request.form.get('rack')
-            model_name = request.form.get('model')
-            ip_address = request.form.get('ip_address')
-            serial_number = request.form.get('serial_number')
-            
-            # Validar IP disponible
-            if not is_ip_available(ip_address):
-                flash('La IP seleccionada ya está en uso', 'danger')
-                return redirect(url_for('inventory.add_device'))
-
-            # 1. Insertar ubicación
-            new_location = Location(
-                loc_building_name=building,
-                loc_detail='Detalle del edificio'
-            )
-            db.session.add(new_location)
-            db.session.flush()  # Para obtener el ID
-
-            # 2. Insertar rack
-            new_rack = Rack(
-                rck_name=rack,
-                loc_id=new_location.loc_id
-            )
-            db.session.add(new_rack)
-            db.session.flush()
-
-            # 3. Insertar o recuperar modelo
-            model = Model.query.filter_by(mdl_name=model_name).first()
-            if not model:
-                model = Model(
-                    mdl_name=model_name,
-                    mdl_manufacturer='Cisco',
-                    mdl_ports=24,
-                    mdl_description=f'Switch {model_name}'
-                )
-                db.session.add(model)
-                db.session.flush()
-
-            # 4. Insertar dispositivo
-            new_device = Device(
-                dev_ip_address=ip_address,
-                dev_serial_number=serial_number,
-                dev_type='switch',
-                mdl_id=model.mdl_id,
-                rck_id=new_rack.rck_id
-            )
-            db.session.add(new_device)
-            
-            db.session.commit()
-            flash('Dispositivo agregado exitosamente!', 'success')
-            return redirect(url_for('inventory.devices'))
-
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Error al agregar dispositivo: {str(e)}', 'error')
-
-    # Para GET: mostrar formulario con IPs disponibles
-    available_ips = get_available_ips()
-    return render_template(
-        'inventory/add_device.html',
-        available_ips=available_ips
-    )

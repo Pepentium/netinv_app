@@ -25,3 +25,42 @@ def get_devices_summary():
     }
     
     return summary
+
+
+def get_devices_chart_data():
+    from app.models import Device, Rack
+
+    # Agrupar por Rack y Estado
+    devices_by_rack_status = db.session.query(
+        Rack.rck_name,
+        Device.dev_status,
+        db.func.count(Device.dev_id)
+    ).join(Device).group_by(Rack.rck_name, Device.dev_status).all()
+
+    # Reestructurar datos para el gráfico
+    data = {}
+    statuses = set()
+
+    for rack_name, status, count in devices_by_rack_status:
+        statuses.add(status)
+        if rack_name not in data:
+            data[rack_name] = {}
+        data[rack_name][status] = count
+
+    # Asegurar que todos los racks tengan todas las categorías
+    labels = sorted(data.keys())
+    status_list = sorted(statuses)
+
+    datasets = []
+    for status in status_list:
+        dataset_data = [data.get(rack, {}).get(status, 0) for rack in labels]
+        datasets.append({
+            'label': status.capitalize(),
+            'data': dataset_data
+        })
+
+    return {
+        'chart_id': 'overviewChart',
+        'labels': labels,
+        'datasets': datasets
+    }
