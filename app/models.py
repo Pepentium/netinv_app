@@ -76,95 +76,43 @@ class User(UserMixin, db.Model):
             return False
 
 
+from app import db
+
 class Location(db.Model):
-    __tablename__ = "tbl_locations"
-
-    loc_id = db.Column("loc_id", db.Integer, primary_key=True)
-    loc_building_name = db.Column("loc_building_name", db.String(100), nullable=False)
-    loc_detail = db.Column("loc_detail", db.String(100), nullable=False)
-
+    __tablename__ = 'tbl_locations'
+    loc_id = db.Column(db.Integer, primary_key=True)
+    loc_building_name = db.Column(db.String(100), nullable=False)
+    loc_detail = db.Column(db.String(100), nullable=False)
+    racks = db.relationship('Rack', backref='location', lazy=True)
 
 class Rack(db.Model):
-    __tablename__ = "tbl_racks"
-
-    rck_id = db.Column("rck_id", db.Integer, primary_key=True)
-    rck_name = db.Column("rck_name", db.String(50), nullable=False)
-    loc_id = db.Column("loc_id", db.Integer, db.ForeignKey("tbl_locations.loc_id"))
-
-    location = db.relationship("Location", backref="racks")
-
+    __tablename__ = 'tbl_racks'
+    rck_id = db.Column(db.Integer, primary_key=True)
+    rck_name = db.Column(db.String(50), nullable=False)
+    loc_id = db.Column(db.Integer, db.ForeignKey('tbl_locations.loc_id'), nullable=False)
+    devices = db.relationship('Device', backref='rack', lazy=True)
 
 class Model(db.Model):
-    __tablename__ = "tbl_models"
-
-    mdl_id = db.Column("mdl_id", db.Integer, primary_key=True)
-    mdl_name = db.Column("mdl_name", db.String(100), nullable=False)
-    mdl_manufacturer = db.Column("mdl_manufacturer", db.String(100))
-    mdl_ports = db.Column("mdl_ports", db.Integer)
-    mdl_description = db.Column("mdl_description", db.Text)
-
-
-from sqlalchemy.ext.hybrid import hybrid_property
-
+    __tablename__ = 'tbl_models'
+    mdl_id = db.Column(db.Integer, primary_key=True)
+    mdl_name = db.Column(db.String(100), nullable=False)
+    mdl_manufacturer = db.Column(db.String(100))
+    mdl_ports = db.Column(db.Integer)
+    mdl_description = db.Column(db.Text)
+    devices = db.relationship('Device', backref='model', lazy=True)
 
 class Device(db.Model):
-    __tablename__ = "tbl_devices"
-
-    dev_id = db.Column("dev_id", db.Integer, primary_key=True)
-    dev_ip_address = db.Column(
-        "dev_ip_address", db.String(45), nullable=False, unique=True
-    )
-    dev_serial_number = db.Column("dev_serial_number", db.String(100), nullable=False)
+    __tablename__ = 'tbl_devices'
+    dev_id = db.Column(db.Integer, primary_key=True)
+    dev_ip_address = db.Column(db.String(45), unique=True, nullable=False)
+    dev_serial_number = db.Column(db.String(100), nullable=False)
     dev_type = db.Column(
-        "dev_type",
-        db.Enum("switch", "router", "firewall", "AP", "server", "other"),
-        nullable=False,
+        db.Enum('switch', 'router', 'firewall', 'AP', 'server', 'other', name='device_types'),
+        nullable=False
     )
-    mdl_id = db.Column(
-        "mdl_id", db.Integer, db.ForeignKey("tbl_models.mdl_id"), nullable=False
-    )
-    rck_id = db.Column(
-        "rck_id", db.Integer, db.ForeignKey("tbl_racks.rck_id"), nullable=False
-    )
+    mdl_id = db.Column(db.Integer, db.ForeignKey('tbl_models.mdl_id'), nullable=False)
+    rck_id = db.Column(db.Integer, db.ForeignKey('tbl_racks.rck_id'), nullable=False)
     dev_status = db.Column(
-        "dev_status", db.Enum("activo", "inactivo", "mantenimiento"), default="activo"
+        db.Enum('activo', 'inactivo', 'mantenimiento', name='status_types'),
+        default='activo'
     )
-
-    # Relaciones
-    model = db.relationship("Model", backref="devices")
-    rack = db.relationship("Rack", backref="devices")
-
-    # Propiedades para acceder a campos relacionados
-    @hybrid_property
-    def mdl_name(self):
-        return self.model.mdl_name if self.model else None
-
-    @hybrid_property
-    def mdl_manufacturer(self):
-        return self.model.mdl_manufacturer if self.model else None
-
-    @hybrid_property
-    def mdl_ports(self):
-        return self.model.mdl_ports if self.model else None
-
-    @hybrid_property
-    def mdl_description(self):
-        return self.model.mdl_description if self.model else None
-
-    @hybrid_property
-    def rck_name(self):
-        return self.rack.rck_name if self.rack else None
-
-    @hybrid_property
-    def loc_building_name(self):
-        return (
-            self.rack.location.loc_building_name
-            if self.rack and self.rack.location
-            else None
-        )
-
-    @hybrid_property
-    def loc_detail(self):
-        return (
-            self.rack.location.loc_detail if self.rack and self.rack.location else None
-        )

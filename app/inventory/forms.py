@@ -1,18 +1,22 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SubmitField
-from wtforms.validators import DataRequired, IPAddress
-from app.models import Location, Rack, Model
-
+from wtforms.validators import DataRequired
 
 class DeviceForm(FlaskForm):
-    ip_address = SelectField("Dirección IP Disponible", validators=[DataRequired()])
+    ip_address = SelectField("Dirección IP Disponible", validators=[DataRequired()], coerce=str)
+    
+    building = SelectField("Edificio", validators=[DataRequired()], coerce=int)  # almacena loc_id
+    loc_detail = StringField("Detalle de Ubicación", render_kw={"readonly": True})
+    
+    rack = SelectField("Rack", validators=[DataRequired()], coerce=int)  # almacena rck_id
+    
+    model = SelectField("Modelo", validators=[DataRequired()], coerce=int)  # almacena mdl_id
+    manufacturer = StringField("Fabricante", render_kw={"readonly": True})
+    ports = StringField("Cantidad de Puertos", render_kw={"readonly": True})
+    mdl_description = StringField("Detalle del Modelo", render_kw={"readonly": True})
+    
     serial_number = StringField("Número de Serie", validators=[DataRequired()])
-    building = StringField("Edificio", validators=[DataRequired()])
-    rack = SelectField("Rack", validators=[DataRequired()])
-    model = SelectField("Modelo", validators=[DataRequired()])
-    manufacturer = StringField("Fabricante", validators=[DataRequired()])
-    ports = StringField("Cantidad de Puertos", validators=[DataRequired()])
-    description = StringField("Descripción", validators=[DataRequired()])
+    
     device_type = SelectField(
         "Tipo de Dispositivo",
         choices=[
@@ -25,4 +29,5 @@ class DeviceForm(FlaskForm):
         ],
         validators=[DataRequired()],
     )
+    
     submit = SubmitField("Guardar")

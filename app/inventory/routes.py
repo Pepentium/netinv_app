@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required
+import mysql
 from app.models import Device, Rack, Location, Model
 from app.inventory.utils import (
     is_ip_available,
@@ -27,57 +28,74 @@ def dashboard():
 
 @inventory_bp.route("/devices")
 @login_required
-def devices():
-    devices = Device.query.all()
-
-    table_headers = [
-        "IP",
-        "Serial",
-        "Tipo",
-        "Estado",
-        "Modelo",
-        "Fabricante",
-        "Puertos",
-        "Descripción",
-        "Rack",
-        "Edificio",
-        "Detalle",
-    ]
-
-    return render_template(
-        "inventory/devices.html", devices=devices, table_headers=table_headers
-    )
+def device_list():
+    devices = Device.query.join(Model).join(Rack).join(Location).all()
+    return render_template('device_list.html', devices=devices)
 
 
-@inventory_bp.route("/ip-check", methods=["GET", "POST"])
+from flask import render_template, request, redirect, url_for, flash
+from app import db
+from app.models import Location, Rack, Model, Device
+
+@inventory_bp.route("/add_device", methods=["GET", "POST"])
 @login_required
-def ip_check():
-    form = DeviceForm()
+def add_device():
+    # Datos predefinidos para edificios
+    buildings = ["EDIFICIO1", "EDIFICIO2", "EDIFICIO3", "EDIFICIO4", "EDIFICIO5"]
 
-    form.ip_address.choices = [(ip, ip) for ip in get_available_ips()]
-    form.building.choices = [
-        (loc.loc_id, loc.loc_building_name) for loc in Location.query.all()
-    ]
-    form.rack.choices = [(rack.rck_id, rack.rck_name) for rack in Rack.query.all()]
-    form.model.choices = [(model.mdl_id, model.mdl_name) for model in Model.query.all()]
+    if request.method == "POST":
+        try:
+            # ===== 1. Procesar ubicación =====
+            location = Location(
+                loc_building_name=request.form["building_name"],
+                loc_detail=request.form["loc_detail"],
+            )
+            db.session.add(location)
+            db.session.flush()  # Para obtener el ID
 
-    if form.validate_on_submit():
-        if not is_ip_available(form.ip_address.data):
-            flash(f"La IP {form.ip_address.data} ya está en uso", "error")
-        else:
+            # ===== 2. Procesar rack =====
+            rack = Rack(rck_name=request.form["rck_name"], loc_id=location.loc_id)
+            db.session.add(rack)
+            db.session.flush()
+
+            # ===== 3. Procesar modelo =====
+            if request.form["model_option"] == "existing":
+                model = Model.query.get(request.form["existing_model"])
+            else:
+                model = Model(
+                    mdl_name=request.form["mdl_name"],
+                    mdl_manufacturer=request.form["mdl_manufacturer"],
+                    mdl_ports=request.form["mdl_ports"],
+                    mdl_description=request.form["mdl_description"],
+                )
+                db.session.add(model)
+                db.session.flush()
+
+            # ===== 4. Procesar dispositivo =====
             device = Device(
-                dev_ip_address=form.ip_address.data,
-                dev_serial_number=form.serial_number.data,
-                dev_type=form.device_type.data,
-                mdl_id=form.model.data,
-                rck_id=form.rack.data,
+                dev_ip_address=request.form["dev_ip_address"],
+                dev_serial_number=request.form["dev_serial_number"],
+                dev_type=request.form["dev_type"],
+                mdl_id=model.mdl_id,
+                rck_id=rack.rck_id,
             )
             db.session.add(device)
-            db.session.commit()
-            flash("Dispositivo registrado con éxito", "success")
-            return redirect(url_for("inventory.ip_check"))
 
-    return render_template("inventory/ip_manager.html", form=form)
+            db.session.commit()
+            flash("Dispositivo registrado exitosamente!", "success")
+            return redirect(url_for("inventory.device_list"))
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Error al registrar dispositivo: {str(e)}", "danger")
+
+    # Para solicitudes GET
+    existing_models = Model.query.order_by(Model.mdl_name).all()
+    return render_template(
+        "inventory/add_device.html",
+        buildings=buildings,
+        existing_models=existing_models,
+    )
 
 
 # --- Nueva funcionalidad ---
@@ -92,3 +110,4 @@ def get_available_ips():
         if str(host) not in used_ips
         and str(host) != "192.168.20.1"  # Excluye la IP gateway
     ]
+

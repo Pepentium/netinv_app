@@ -36,22 +36,25 @@
             <div class="stat-card">
                 <div class="form-group">
                     {{ form.manufacturer.label }}
-                    {{ form.manufacturer(class="form-control") }}
+                    {{ form.manufacturer(class="form-control", readonly=true) }}
                 </div>
                 <div class="form-group">
                     {{ form.ports.label }}
                     {{ form.ports(class="form-control") }}
                 </div>
                 <div class="form-group">
-                    {{ form.description.label }}
-                    {{ form.description(class="form-control") }}
+                    {{ form.mdl_description.label }}
+                    {{ form.mdl_description(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.loc_detail.label }}
+                    {{ form.loc_detail(class="form-control", readonly=true) }}
                 </div>
                 <div class="form-group">
                     {{ form.device_type.label }}
                     {{ form.device_type(class="custom-select") }}
                 </div>
             </div>
-
         </div>
 
         <div style="margin-top: 20px;">

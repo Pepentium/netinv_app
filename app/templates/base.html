@@ -31,14 +31,14 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="nav-item {% if request.endpoint == 'inventory.devices' %}active{% endif %}">
-                        <a href="{{ url_for('inventory.devices') }}">
+                    <li class="nav-item {% if request.endpoint == 'inventory.device_list' %}active{% endif %}">
+                        <a href="{{ url_for('inventory.device_list') }}">
                             <i class="fas fa-server"></i>
                             <span>Dispositivos</span>
                         </a>
                     </li>
-                    <li class="nav-item {% if request.endpoint == 'inventory.ip_check' %}active{% endif %}">
-                        <a href="{{ url_for('inventory.ip_check') }}">
+                    <li class="nav-item {% if request.endpoint == 'inventory.add_device' %}active{% endif %}">
+                        <a href="{{ url_for('inventory.add_device') }}">
                             <i class="fas fa-map-marked-alt"></i>
                             <span>Gestión de IPs</span>
                         </a>
