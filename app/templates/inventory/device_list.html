@@ -1,0 +1,131 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-list-ul"></i> Lista de Dispositivos</h2>
+        <a href="{{ url_for('inventory.add_device') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nuevo Dispositivo
+        </a>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Edificio</label>
+                    <select class="form-select">
+                        <option>Todos</option>
+                        <option>EDIFICIO1</option>
+                        <option>EDIFICIO2</option>
+                        <!-- Agregar más según necesidad -->
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Tipo</label>
+                    <select class="form-select">
+                        <option>Todos</option>
+                        <option>switch</option>
+                        <option>router</option>
+                        <!-- Otros tipos -->
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Estado</label>
+                    <select class="form-select">
+                        <option>Todos</option>
+                        <option>activo</option>
+                        <option>inactivo</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-funnel"></i> Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de dispositivos -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>IP</th>
+                            <th>Serial</th>
+                            <th>Tipo</th>
+                            <th>Modelo</th>
+                            <th>Ubicación</th>
+                            <th>Rack</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for device, building, loc_detail, rack, model_name, manufacturer
+                        in devices %}
+                        <tr>
+                            <td>{{ device.dev_ip_address }}</td>
+                            <td>{{ device.dev_serial_number }}</td>
+                            <td>
+                                <span
+                                    class="badge {% if device.dev_type == 'switch' %}bg-primary {% elif device.dev_type == 'router' %}bg-info {% elif device.dev_type == 'firewall' %}bg-danger {% else %}bg-secondary{% endif %}">
+                                    {{ device.dev_type }}
+                                </span>
+                            </td>
+                            <td>{{ manufacturer }} {{ model_name }}</td>
+                            <td>{{ building }} - {{ loc_detail }}</td>
+                            <td>{{ rack }}</td>
+                            <td>
+                                <span
+                                    class="badge {% if device.dev_status == 'activo' %}bg-success {% elif device.dev_status == 'inactivo' %}bg-warning {% else %}bg-secondary{% endif %}">
+                                    {{ device.dev_status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-outline-primary" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center text-muted">
+                                No hay dispositivos registrados
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
+
+<!-- Confirmación para eliminar -->
+<script>
+    function confirmDelete(devId) {
+        return confirm(`¿Estás seguro de eliminar el dispositivo ${devId}?`);
+    }
+</script>
+{% endblock %}

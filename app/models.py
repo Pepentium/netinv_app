@@ -78,19 +78,34 @@ class User(UserMixin, db.Model):
 
 from app import db
 
+class Device(db.Model):
+    __tablename__ = 'tbl_devices'
+    
+    dev_id = db.Column(db.Integer, primary_key=True)
+    dev_ip_address = db.Column(db.String(45), unique=True, nullable=False)
+    dev_serial_number = db.Column(db.String(100), nullable=False)
+    dev_type = db.Column(db.Enum('switch', 'router', 'firewall', 'AP', 'server', 'other'), nullable=False)
+    dev_status = db.Column(db.Enum('activo', 'inactivo', 'mantenimiento'), default='activo')
+    
+    # Relaciones
+    mdl_id = db.Column(db.Integer, db.ForeignKey('tbl_models.mdl_id'), nullable=False)
+    model = db.relationship('Model', backref='devices')
+    
+    rck_id = db.Column(db.Integer, db.ForeignKey('tbl_racks.rck_id'), nullable=False)
+    rack = db.relationship('Rack', backref='devices')
+
 class Location(db.Model):
     __tablename__ = 'tbl_locations'
     loc_id = db.Column(db.Integer, primary_key=True)
     loc_building_name = db.Column(db.String(100), nullable=False)
     loc_detail = db.Column(db.String(100), nullable=False)
-    racks = db.relationship('Rack', backref='location', lazy=True)
+    racks = db.relationship('Rack', backref='location', lazy='dynamic')
 
 class Rack(db.Model):
     __tablename__ = 'tbl_racks'
     rck_id = db.Column(db.Integer, primary_key=True)
     rck_name = db.Column(db.String(50), nullable=False)
     loc_id = db.Column(db.Integer, db.ForeignKey('tbl_locations.loc_id'), nullable=False)
-    devices = db.relationship('Device', backref='rack', lazy=True)
 
 class Model(db.Model):
     __tablename__ = 'tbl_models'
@@ -99,20 +114,3 @@ class Model(db.Model):
     mdl_manufacturer = db.Column(db.String(100))
     mdl_ports = db.Column(db.Integer)
     mdl_description = db.Column(db.Text)
-    devices = db.relationship('Device', backref='model', lazy=True)
-
-class Device(db.Model):
-    __tablename__ = 'tbl_devices'
-    dev_id = db.Column(db.Integer, primary_key=True)
-    dev_ip_address = db.Column(db.String(45), unique=True, nullable=False)
-    dev_serial_number = db.Column(db.String(100), nullable=False)
-    dev_type = db.Column(
-        db.Enum('switch', 'router', 'firewall', 'AP', 'server', 'other', name='device_types'),
-        nullable=False
-    )
-    mdl_id = db.Column(db.Integer, db.ForeignKey('tbl_models.mdl_id'), nullable=False)
-    rck_id = db.Column(db.Integer, db.ForeignKey('tbl_racks.rck_id'), nullable=False)
-    dev_status = db.Column(
-        db.Enum('activo', 'inactivo', 'mantenimiento', name='status_types'),
-        default='activo'
-    )

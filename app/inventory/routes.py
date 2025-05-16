@@ -26,12 +26,24 @@ def dashboard():
     )
 
 
-@inventory_bp.route("/devices")
+@inventory_bp.route("/device_list")
 @login_required
 def device_list():
-    devices = Device.query.join(Model).join(Rack).join(Location).all()
-    return render_template('device_list.html', devices=devices)
-
+    devices = db.session.query(
+        Device,
+        Location.loc_building_name,
+        Location.loc_detail,
+        Rack.rck_name,
+        Model.mdl_name,
+        Model.mdl_manufacturer
+    ).join(
+        Rack, Device.rck_id == Rack.rck_id
+    ).join(
+        Location, Rack.loc_id == Location.loc_id
+    ).join(
+        Model, Device.mdl_id == Model.mdl_id
+    ).all()
+    return render_template('inventory/device_list.html', devices=devices)
 
 from flask import render_template, request, redirect, url_for, flash
 from app import db
