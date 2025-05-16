@@ -52,9 +52,7 @@ from app.models import Location, Rack, Model, Device
 @inventory_bp.route("/add_device", methods=["GET", "POST"])
 @login_required
 def add_device():
-    # Datos predefinidos para edificios
-    buildings = ["EDIFICIO1", "EDIFICIO2", "EDIFICIO3", "EDIFICIO4", "EDIFICIO5"]
-
+    
     if request.method == "POST":
         try:
             # ===== 1. Procesar ubicación =====
@@ -94,23 +92,24 @@ def add_device():
             db.session.add(device)
 
             db.session.commit()
-            flash("Dispositivo registrado exitosamente!", "success")
-            return redirect(url_for("inventory.device_list"))
-
+            
+            flash('Dispositivo registrado exitosamente!', 'success')
+            return redirect(url_for('inventory.device_list'))
+            
         except Exception as e:
             db.session.rollback()
-            flash(f"Error al registrar dispositivo: {str(e)}", "danger")
+            flash(f'Error al registrar: {str(e)}', 'danger')
 
-    # Para solicitudes GET
-    existing_models = Model.query.order_by(Model.mdl_name).all()
-    return render_template(
-        "inventory/add_device.html",
-        buildings=buildings,
-        existing_models=existing_models,
-    )
+    # GET request
+    available_ips = get_available_ips()
+    buildings = ['EDIFICIO1', 'EDIFICIO2', 'EDIFICIO3', 'EDIFICIO4', 'EDIFICIO5']
+    existing_models = Model.query.all()
+    
+    return render_template('inventory/add_device.html',
+                        available_ips=available_ips,
+                        buildings=buildings,
+                        existing_models=existing_models)
 
-
-# --- Nueva funcionalidad ---
 def get_available_ips():
     """Obtiene todas las IPs disponibles en el rango 192.168.20.0/24"""
     used_ips = {device.dev_ip_address for device in Device.query.all()}
@@ -122,4 +121,3 @@ def get_available_ips():
         if str(host) not in used_ips
         and str(host) != "192.168.20.1"  # Excluye la IP gateway
     ]
-

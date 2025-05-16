@@ -3,7 +3,13 @@ from app.models import Device
 
 
 def is_ip_available(ip_address):
+    """Verifica si una IP está disponible"""
     existing_device = Device.query.filter_by(dev_ip_address=ip_address).first()
+    return existing_device is None
+
+def is_serial_available(serial_number):
+    """Verifica si un número de serie está disponible"""
+    existing_device = Device.query.filter_by(dev_serial_number=serial_number).first()
     return existing_device is None
 
 
