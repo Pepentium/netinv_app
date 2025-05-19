@@ -26,24 +26,52 @@ def dashboard():
     )
 
 
+from flask import request
 @inventory_bp.route("/device_list")
 @login_required
 def device_list():
-    devices = db.session.query(
-        Device,
-        Location.loc_building_name,
-        Location.loc_detail,
-        Rack.rck_name,
-        Model.mdl_name,
-        Model.mdl_manufacturer
-    ).join(
-        Rack, Device.rck_id == Rack.rck_id
-    ).join(
-        Location, Rack.loc_id == Location.loc_id
-    ).join(
-        Model, Device.mdl_id == Model.mdl_id
-    ).all()
-    return render_template('inventory/device_list.html', devices=devices)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+
+    # Capturar filtros
+    building = request.args.get('building', type=str)
+    dev_type = request.args.get('type', type=str)
+    status = request.args.get('status', type=str)
+
+    # Base de la consulta
+    query = (
+        db.session.query(
+            Device,
+            Location.loc_building_name,
+            Location.loc_detail,
+            Rack.rck_name,
+            Model.mdl_name,
+            Model.mdl_manufacturer,
+        )
+        .join(Rack, Device.rck_id == Rack.rck_id)
+        .join(Location, Rack.loc_id == Location.loc_id)
+        .join(Model, Device.mdl_id == Model.mdl_id)
+    )
+
+    # Aplicar filtros condicionales
+    if building:
+        query = query.filter(Location.loc_building_name == building)
+    if dev_type:
+        query = query.filter(Device.dev_type == dev_type)
+    if status:
+        query = query.filter(Device.dev_status == status)
+
+    # Orden y paginación
+    query = query.order_by(Device.dev_ip_address)
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    return render_template(
+        "inventory/device_list.html",
+        devices=pagination.items,
+        pagination=pagination
+    )
+
+
 
 from flask import render_template, request, redirect, url_for, flash
 from app import db
@@ -52,7 +80,7 @@ from app.models import Location, Rack, Model, Device
 @inventory_bp.route("/add_device", methods=["GET", "POST"])
 @login_required
 def add_device():
-    
+
     if request.method == "POST":
         try:
             # ===== 1. Procesar ubicación =====
@@ -92,23 +120,26 @@ def add_device():
             db.session.add(device)
 
             db.session.commit()
-            
-            flash('Dispositivo registrado exitosamente!', 'success')
-            return redirect(url_for('inventory.device_list'))
-            
+
+            flash("Dispositivo registrado exitosamente!", "success")
+            return redirect(url_for("inventory.device_list"))
+
         except Exception as e:
             db.session.rollback()
-            flash(f'Error al registrar: {str(e)}', 'danger')
+            flash(f"Error al registrar: {str(e)}", "danger")
 
     # GET request
     available_ips = get_available_ips()
-    buildings = ['EDIFICIO1', 'EDIFICIO2', 'EDIFICIO3', 'EDIFICIO4', 'EDIFICIO5']
+    buildings = ["EDIFICIO1", "EDIFICIO2", "EDIFICIO3", "EDIFICIO4", "EDIFICIO5"]
     existing_models = Model.query.all()
-    
-    return render_template('inventory/add_device.html',
-                        available_ips=available_ips,
-                        buildings=buildings,
-                        existing_models=existing_models)
+
+    return render_template(
+        "inventory/add_device.html",
+        available_ips=available_ips,
+        buildings=buildings,
+        existing_models=existing_models,
+    )
+
 
 def get_available_ips():
     """Obtiene todas las IPs disponibles en el rango 192.168.20.0/24"""
