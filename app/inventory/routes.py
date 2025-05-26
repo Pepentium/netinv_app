@@ -65,13 +65,22 @@ def device_list():
     query = query.order_by(Device.dev_ip_address)
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
 
+    # Obtener listas únicas para los filtros dinámicos
+    buildings = ["EDIFICIO1", "EDIFICIO2", "EDIFICIO3", "EDIFICIO4", "EDIFICIO5"]
+    types = [t[0] for t in db.session.query(Device.dev_type).distinct().order_by(Device.dev_type).all()]
+    statuses = [s[0] for s in db.session.query(Device.dev_status).distinct().order_by(Device.dev_status).all()]
+
     return render_template(
         "inventory/device_list.html",
         devices=pagination.items,
-        pagination=pagination
+        pagination=pagination,
+        buildings=buildings,
+        types=types,
+        statuses=statuses,
+        selected_building=building or '',
+        selected_type=dev_type or '',
+        selected_status=status or ''
     )
-
-
 
 from flask import render_template, request, redirect, url_for, flash
 from app import db
@@ -152,3 +161,18 @@ def get_available_ips():
         if str(host) not in used_ips
         and str(host) != "192.168.20.1"  # Excluye la IP gateway
     ]
+
+@inventory_bp.route("/delete_device/<int:device_id>", methods=["POST"])
+@login_required
+def delete_device(device_id):
+    device = Device.query.get_or_404(device_id)
+
+    try:
+        db.session.delete(device)
+        db.session.commit()
+        flash(f"Dispositivo con IP {device.dev_ip_address} eliminado exitosamente.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"No se pudo eliminar el dispositivo: {str(e)}", "danger")
+
+    return redirect(url_for("inventory.device_list"))

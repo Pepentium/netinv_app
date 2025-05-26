@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block content %}
 <div class="w-100 w-md-75 w-lg-50 mx-auto">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
         <h2><i class="bi bi-list-ul"></i> Lista de Dispositivos</h2>
         <a href="{{ url_for('inventory.add_device') }}" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Nuevo Dispositivo
@@ -8,33 +8,41 @@
     </div>
 
     <!-- Filtros -->
-    <form class="row g-3" method="get">
+    <form class="stat-card row g-3 mb-4" method="get">
+        <!-- Filtro Edificio -->
         <div class="col-md-3">
-            <label class="form-label">Edificio</label>
-            <select name="building" class="custom-select">
+            <label for="filterBuilding" class="form-label">Edificio</label>
+            <select id="filterBuilding" name="building" class="custom-select">
                 <option value="">Todos</option>
-                <option value="EDIFICIO1" {{ 'selected' if request.args.get('building')=='EDIFICIO1' }}>EDIFICIO1
-                </option>
-                <option value="EDIFICIO2" {{ 'selected' if request.args.get('building')=='EDIFICIO2' }}>EDIFICIO2
-                </option>
+                {% for b in buildings %}
+                <option value="{{ b }}" {% if b==selected_building %}selected{% endif %}>{{ b }}</option>
+                {% endfor %}
             </select>
         </div>
+
+        <!-- Filtro Tipo -->
         <div class="col-md-3">
-            <label class="form-label">Tipo</label>
-            <select name="type" class="custom-select">
+            <label for="filterType" class="form-label">Tipo</label>
+            <select id="filterType" name="type" class="custom-select">
                 <option value="">Todos</option>
-                <option value="switch" {{ 'selected' if request.args.get('type')=='switch' }}>switch</option>
-                <option value="router" {{ 'selected' if request.args.get('type')=='router' }}>router</option>
+                {% for t in types %}
+                <option value="{{ t }}" {% if t==selected_type %}selected{% endif %}>{{ t|capitalize }}</option>
+                {% endfor %}
             </select>
         </div>
+
+        <!-- Filtro Estado -->
         <div class="col-md-3">
-            <label class="form-label">Estado</label>
-            <select name="status" class="custom-select">
+            <label for="filterStatus" class="form-label">Estado</label>
+            <select id="filterStatus" name="status" class="custom-select">
                 <option value="">Todos</option>
-                <option value="activo" {{ 'selected' if request.args.get('status')=='activo' }}>activo</option>
-                <option value="inactivo" {{ 'selected' if request.args.get('status')=='inactivo' }}>inactivo</option>
+                {% for s in statuses %}
+                <option value="{{ s }}" {% if s==selected_status %}selected{% endif %}>{{ s|capitalize }}</option>
+                {% endfor %}
             </select>
         </div>
+
+        <!-- Botón Filtrar -->
         <div class="col-md-3 d-flex align-items-end">
             <button type="submit" class="btn btn-outline-primary w-100">
                 <i class="bi bi-funnel"></i> Filtrar
@@ -43,12 +51,13 @@
     </form>
 
 
+
     <!-- Tabla de dispositivos -->
-    <div class="card">
+    <div class="stat-card">
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover">
-                    <thead class="table-light">
+                    <thead class="thead-dark">
                         <tr>
                             <th>IP</th>
                             <th>Serial</th>
@@ -81,10 +90,20 @@
                                     {{ device.dev_status }}
                                 </span>
                             </td>
-                            <td>
+                            <td class="d-flex gap-1">
+                                <!-- Botón Editar -->
                                 <a href="#" class="btn btn-sm btn-outline-primary" title="Editar">
                                     <i class="bi bi-pencil"></i>
                                 </a>
+
+                                <!-- Botón Eliminar -->
+                                <form method="POST"
+                                    action="{{ url_for('inventory.delete_device', device_id=device.dev_id) }}"
+                                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar este dispositivo?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         {% else %}
@@ -100,47 +119,96 @@
 
             <!-- Paginación -->
             <nav aria-label="Page navigation" class="mt-4">
-                <ul class="pagination justify-content-center">
+                <ul class="flex items-center -space-x-px h-8 text-sm justify-center">
                     {% if pagination.has_prev %}
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('inventory.device_list', page=pagination.prev_num) }}">«
-                            Anterior</a>
+                    <li>
+                        <a href="{{ url_for('inventory.device_list', page=pagination.prev_num) }}"
+                            class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">
+                            <span class="sr-only">« Anterior</span>
+                            <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="M5 1 1 5l4 4" />
+                            </svg>
+                        </a>
                     </li>
                     {% else %}
-                    <li class="page-item disabled"><span class="page-link">« Anterior</span></li>
+                    <li>
+                        <span
+                            class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-400 bg-white border border-e-0 border-gray-300 rounded-s-lg">
+                            <span class="sr-only">« Anterior</span>
+                            <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="M5 1 1 5l4 4" />
+                            </svg>
+                        </span>
+                    </li>
                     {% endif %}
 
                     {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
                     {% if p %}
                     {% if p == pagination.page %}
-                    <li class="page-item active"><span class="page-link">{{ p }}</span></li>
+                    <li>
+                        <span aria-current="page"
+                            class="z-10 flex items-center justify-center px-3 h-8 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700">
+                            {{ p }}
+                        </span>
+                    </li>
                     {% else %}
-                    <li class="page-item">
-                        <a class="page-link" href="{{ url_for('inventory.device_list', page=p) }}">{{ p }}</a>
+                    <li>
+                        <a href="{{ url_for('inventory.device_list', page=p) }}"
+                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                            {{ p }}
+                        </a>
                     </li>
                     {% endif %}
                     {% else %}
-                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                    <li>
+                        <span
+                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300">
+                            …
+                        </span>
+                    </li>
                     {% endif %}
                     {% endfor %}
 
                     {% if pagination.has_next %}
-                    <li class="page-item">
-                        <a class="page-link"
-                            href="{{ url_for('inventory.device_list', page=pagination.next_num) }}">Siguiente »</a>
+                    <li>
+                        <a href="{{ url_for('inventory.device_list', page=pagination.next_num) }}"
+                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">
+                            <span class="sr-only">Siguiente »</span>
+                            <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 9 4-4-4-4" />
+                            </svg>
+                        </a>
                     </li>
                     {% else %}
-                    <li class="page-item disabled"><span class="page-link">Siguiente »</span></li>
+                    <li>
+                        <span
+                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-white border border-gray-300 rounded-e-lg">
+                            <span class="sr-only">Siguiente »</span>
+                            <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 9 4-4-4-4" />
+                            </svg>
+                        </span>
+                    </li>
                     {% endif %}
                 </ul>
             </nav>
+
         </div>
     </div>
 </div>
 
 <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
-
+<link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 <!-- Confirmación para eliminar -->
 <script>
     function confirmDelete(devId) {

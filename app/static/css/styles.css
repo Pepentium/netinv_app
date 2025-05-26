@@ -366,25 +366,44 @@ main {
 
 /* Mostrar botón en móviles */
 @media (max-width: 768px) {
+    /* Botón visible */
     .sidebar-toggle {
         display: block;
     }
 
+    /* Sidebar fijo y superpuesto */
     .sidebar {
         position: fixed;
         top: 0;
         left: 0;
         bottom: 0;
-        z-index: 999;
+        z-index: 1000; /* alto para estar encima */
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        transform: translateX(-100%);
     }
 
+    /* Sidebar abierto (transform = 0) */
     .sidebar:not(.collapsed) {
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        transform: translateX(0);
     }
 
-    /* Ajustar contenido cuando el sidebar se abre */
-    .sidebar:not(.collapsed)+.main-content {
-        transform: translateX(250px);
+    /* Main content NO se mueve */
+    .main-content {
+        /* No transform ni margen */
+        position: relative; /* para que el overlay pueda funcionar */
+        z-index: 0;
+    }
+
+    /* Overlay opcional para oscurecer el contenido cuando sidebar está abierto */
+    body.sidebar-open::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 900; /* menos que el sidebar, más que el contenido */
     }
 }
 
@@ -498,3 +517,4 @@ main {
     align-items: center;
     gap: 0.5rem;
 }
+
