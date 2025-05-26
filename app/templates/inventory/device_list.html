@@ -55,9 +55,9 @@
     <!-- Tabla de dispositivos -->
     <div class="stat-card">
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="thead-dark">
+            <div class="relative overflow-x-auto">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th>IP</th>
                             <th>Serial</th>
@@ -72,7 +72,7 @@
                     <tbody>
                         {% for device, building, loc_detail, rack, model_name, manufacturer
                         in devices %}
-                        <tr>
+                        <tr class="bg-white border-b border-gray-200">
                             <td>{{ device.dev_ip_address }}</td>
                             <td>{{ device.dev_serial_number }}</td>
                             <td>
@@ -91,11 +91,6 @@
                                 </span>
                             </td>
                             <td class="d-flex gap-1">
-                                <!-- Botón Editar -->
-                                <a href="#" class="btn btn-sm btn-outline-primary" title="Editar">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-
                                 <!-- Botón Eliminar -->
                                 <form method="POST"
                                     action="{{ url_for('inventory.delete_device', device_id=device.dev_id) }}"
@@ -107,7 +102,7 @@
                             </td>
                         </tr>
                         {% else %}
-                        <tr>
+                        <tr  class="bg-white border-b border-gray-200">
                             <td colspan="8" class="text-center text-muted">
                                 No hay dispositivos registrados
                             </td>
