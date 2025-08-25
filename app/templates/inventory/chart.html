@@ -1,52 +1,23 @@
-{% set colors = ['#4CAF50', '#FFC107', '#F44336', '#2196F3'] %}
+<div style="width: 500px; margin: auto;">
+    <canvas id="overviewChart" width="500" height="300"></canvas>
+</div>
 
-<canvas id="overviewChart"></canvas>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('overviewChart').getContext('2d');
+    const ctx = document.getElementById("overviewChart").getContext("2d");
 
     const data = {
-        labels: [
-            {% for item in chart_overview %}
-                "{{ item.label }}"{% if not loop.last %},{% endif %}
-            {% endfor %}
-        ],
-        datasets: [{
-            label: "Resumen de Inventario",
-            data: [
-                {% for item in chart_overview %}
-                    {{ item.value }}{% if not loop.last %},{% endif %}
-                {% endfor %}
-            ],
-            backgroundColor: [
-                {% for item in chart_overview %}
-                    "{{ colors[loop.index0 % colors|length] }}"{% if not loop.last %},{% endif %}
-                {% endfor %}
-            ],
-            borderWidth: 1
-        }]
+        labels: {{ chart_overview.labels | tojson }},
+        datasets: {{ chart_overview.datasets | tojson }}
     };
 
-    const config = {
-        type: 'bar',
-        data: data,
+    new Chart(ctx, {
+        type: "bar",
+        data,
         options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    enabled: true
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+            responsive: false,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: "bottom" } }
         }
-    };
-
-    new Chart(ctx, config);
+    });
 </script>

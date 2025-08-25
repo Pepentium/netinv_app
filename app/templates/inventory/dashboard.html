@@ -7,13 +7,13 @@
 
 <!-- Gráfico general centrado y por encima del grid -->
 <div class="chart-wrapper">
-    {% with chart_id=chart_overview.chart_id,
-            labels=chart_overview.labels,
-            values=chart_overview.values,
-            dataset_label=chart_overview.label,
-            chart_type="bar" %}
-        {% include "inventory/chart.html" %}
-    {% endwith %}
+{% with 
+    chart_id=chart_overview.chart_id,
+    labels=chart_overview.labels,
+    datasets=chart_overview.datasets,
+    chart_type="bar" %}
+    {% include "inventory/chart.html" %}
+{% endwith %}
 </div>
 
 <div class="stats-grid">
@@ -26,48 +26,58 @@
         <h3>Dispositivos por Estado</h3>
         <table class="stat-table">
             <thead>
-                <tr><th>Estado</th><th>Cantidad</th></tr>
+                <tr>
+                    <th>Estado</th>
+                    <th>Cantidad</th>
+                </tr>
             </thead>
             <tbody>
                 {% for status, count in summary.by_status %}
-                    <tr>
-                        <td>{{ status|capitalize }}</td>
-                        <td>{{ count }}</td>
-                    </tr>
+                <tr>
+                    <td>{{ status|capitalize }}</td>
+                    <td>{{ count }}</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <div class="stat-card">
-        <h3>Dispositivos por Tipo</h3>
-        <table class="stat-table">
-            <thead>
-                <tr><th>Tipo</th><th>Cantidad</th></tr>
-            </thead>
-            <tbody>
-                {% for type, count in summary.by_type %}
-                    <tr>
-                        <td>{{ type|capitalize }}</td>
-                        <td>{{ count }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+<div class="stat-card">
+    <h3>Dispositivos por Tipo</h3>
+    <table class="stat-table">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for type, count in summary.by_type %}
+            <tr>
+                <td>{{ type|capitalize }}</td>
+                <td>{{ count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-    <div class="stat-card">
+
+    <div class="stat-card" style="max-height: 300px; overflow-y: auto; padding-right: 8px;">
         <h3>Dispositivos por Rack</h3>
-        <table class="stat-table">
+        <table class="stat-table" style="width: 100%; border-collapse: collapse;">
             <thead>
-                <tr><th>Rack</th><th>Cantidad</th></tr>
+                <tr>
+                    <th>Rack</th>
+                    <th>Cantidad</th>
+                </tr>
             </thead>
             <tbody>
                 {% for rack, count in summary.by_rack %}
-                    <tr>
-                        <td>{{ rack }}</td>
-                        <td>{{ count }}</td>
-                    </tr>
+                <tr>
+                    <td>{{ rack }}</td>
+                    <td>{{ count }}</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>

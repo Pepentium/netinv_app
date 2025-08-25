@@ -420,6 +420,12 @@ main {
     margin-bottom: 30px;
 }
 
+.scroll-container {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+
 .stat-card {
     background-color: #fff;
     border-radius: 8px;
@@ -460,19 +466,12 @@ main {
 .stat-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
 }
 
-.stat-table th,
-.stat-table td {
-    padding: 8px;
+.stat-table th, .stat-table td {
+    padding: 0.5rem;
     text-align: left;
     border-bottom: 1px solid #eee;
-}
-
-.stat-table th {
-    background-color: #f9f9f9;
-    font-weight: bold;
 }
 
 .chart-container {

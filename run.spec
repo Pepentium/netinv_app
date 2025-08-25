@@ -5,8 +5,8 @@ a = Analysis(
     ['run.py'],
     pathex=[],
     binaries=[],
-    datas=[('app/templates', 'app/templates'), ('app/static', 'app/static'), ('app/config.py', 'app'), ('.env', '.')],
-    hiddenimports=['app.config'],
+    datas=[('app/templates', 'app/templates'), ('app/static', 'app/static')],
+    hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -35,5 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['eva.ico'],
+    icon=['icono.ico'],
 )

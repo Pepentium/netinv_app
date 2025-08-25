@@ -115,7 +115,6 @@ imports:
  &#8226;   <a href="#_weakrefset">_weakrefset</a>
  &#8226;   <a href="#abc">abc</a>
  &#8226;   <a href="#app">app</a>
- &#8226;   <a href="#app.config">app.config</a>
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#collections">collections</a>
  &#8226;   <a href="#copyreg">copyreg</a>
@@ -793,7 +792,6 @@ imported by:
  &#8226;   <a href="#sqlalchemy.ext.asyncio.scoping">sqlalchemy.ext.asyncio.scoping</a>
  &#8226;   <a href="#sqlalchemy.ext.asyncio.session">sqlalchemy.ext.asyncio.session</a>
  &#8226;   <a href="#sqlalchemy.ext.compiler">sqlalchemy.ext.compiler</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.inspection">sqlalchemy.inspection</a>
  &#8226;   <a href="#sqlalchemy.log">sqlalchemy.log</a>
  &#8226;   <a href="#sqlalchemy.orm">sqlalchemy.orm</a>
@@ -2739,7 +2737,6 @@ imports:
 imported by:
     <a href="#app.auth">app.auth</a>
  &#8226;   <a href="#app.auth.utils">app.auth.utils</a>
- &#8226;   <a href="#app.config">app.config</a>
  &#8226;   <a href="#app.inventory">app.inventory</a>
  &#8226;   <a href="#app.inventory.routes">app.inventory.routes</a>
  &#8226;   <a href="#app.inventory.utils">app.inventory.utils</a>
@@ -2807,24 +2804,6 @@ imported by:
 </div>
 
 <div class="node">
-  <a name="app.config"></a>
-  <a target="code" href="///T:/DESARROLLO/VCODE/netinv_app/app/config.py" type="text/plain"><tt>app.config</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#app">app</a>
- &#8226;   <a href="#dotenv">dotenv</a>
- &#8226;   <a href="#os">os</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#run.py">run.py</a>
-
-  </div>
-
-</div>
-
-<div class="node">
   <a name="app.inventory"></a>
   <a target="code" href="///T:/DESARROLLO/VCODE/netinv_app/app/inventory/__init__.py" type="text/plain"><tt>app.inventory</tt></a>
 <span class="moduletype">Package</span>  <div class="import">
@@ -2848,7 +2827,6 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#app.inventory">app.inventory</a>
- &#8226;   <a href="#app.models">app.models</a>
  &#8226;   <a href="#flask_wtf">flask_wtf</a>
  &#8226;   <a href="#wtforms">wtforms</a>
  &#8226;   <a href="#wtforms.validators">wtforms.validators</a>
@@ -2875,6 +2853,7 @@ imports:
  &#8226;   <a href="#flask">flask</a>
  &#8226;   <a href="#flask_login">flask_login</a>
  &#8226;   <a href="#ipaddress">ipaddress</a>
+ &#8226;   <a href="#mysql">mysql</a>
 
   </div>
   <div class="import">
@@ -2912,7 +2891,6 @@ imports:
  &#8226;   <a href="#base64">base64</a>
  &#8226;   <a href="#flask_login">flask_login</a>
  &#8226;   <a href="#hashlib">hashlib</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#werkzeug.security">werkzeug.security</a>
 
   </div>
@@ -2920,7 +2898,6 @@ imports:
 imported by:
     <a href="#app.auth.routes">app.auth.routes</a>
  &#8226;   <a href="#app.auth.utils">app.auth.utils</a>
- &#8226;   <a href="#app.inventory.forms">app.inventory.forms</a>
  &#8226;   <a href="#app.inventory.routes">app.inventory.routes</a>
  &#8226;   <a href="#app.inventory.utils">app.inventory.utils</a>
 
@@ -6164,8 +6141,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#app.config">app.config</a>
- &#8226;   <a href="#dotenv.ipython">dotenv.ipython</a>
+    <a href="#dotenv.ipython">dotenv.ipython</a>
  &#8226;   <a href="#dotenv.main">dotenv.main</a>
  &#8226;   <a href="#dotenv.parser">dotenv.parser</a>
  &#8226;   <a href="#dotenv.variables">dotenv.variables</a>
@@ -14510,7 +14486,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#mysql">mysql</a>
+    <a href="#app.inventory.routes">app.inventory.routes</a>
+ &#8226;   <a href="#mysql">mysql</a>
  &#8226;   <a href="#mysql.connector">mysql.connector</a>
  &#8226;   <a href="#mysql.connector.opentelemetry.instrumentation">mysql.connector.opentelemetry.instrumentation</a>
  &#8226;   <a href="#mysql.opentelemetry">mysql.opentelemetry</a>
@@ -16468,7 +16445,6 @@ imported by:
  &#8226;   <a href="#_sitebuiltins">_sitebuiltins</a>
  &#8226;   <a href="#_strptime">_strptime</a>
  &#8226;   <a href="#app">app</a>
- &#8226;   <a href="#app.config">app.config</a>
  &#8226;   <a href="#argparse">argparse</a>
  &#8226;   <a href="#asyncio.base_events">asyncio.base_events</a>
  &#8226;   <a href="#asyncio.base_subprocess">asyncio.base_subprocess</a>
@@ -23033,7 +23009,6 @@ imported by:
  &#8226;   <a href="#sqlalchemy.ext.asyncio.session">sqlalchemy.ext.asyncio.session</a>
  &#8226;   <a href="#sqlalchemy.ext.baked">sqlalchemy.ext.baked</a>
  &#8226;   <a href="#sqlalchemy.ext.compiler">sqlalchemy.ext.compiler</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.future">sqlalchemy.future</a>
  &#8226;   <a href="#sqlalchemy.inspection">sqlalchemy.inspection</a>
  &#8226;   <a href="#sqlalchemy.log">sqlalchemy.log</a>
@@ -26060,7 +26035,6 @@ imported by:
     <a href="#sqlalchemy.ext.asyncio">sqlalchemy.ext.asyncio</a>
  &#8226;   <a href="#sqlalchemy.ext.baked">sqlalchemy.ext.baked</a>
  &#8226;   <a href="#sqlalchemy.ext.compiler">sqlalchemy.ext.compiler</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
 
   </div>
 
@@ -26340,36 +26314,6 @@ imported by:
 </div>
 
 <div class="node">
-  <a name="sqlalchemy.ext.hybrid"></a>
-  <a target="code" href="///T:/DESARROLLO/VCODE/netinv_app/.venv/Lib/site-packages/sqlalchemy/ext/hybrid.py" type="text/plain"><tt>sqlalchemy.ext.hybrid</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#__future__">__future__</a>
- &#8226;   <a href="#sqlalchemy">sqlalchemy</a>
- &#8226;   <a href="#sqlalchemy.ext">sqlalchemy.ext</a>
- &#8226;   <a href="#sqlalchemy.orm">sqlalchemy.orm</a>
- &#8226;   <a href="#sqlalchemy.orm.attributes">sqlalchemy.orm.attributes</a>
- &#8226;   <a href="#sqlalchemy.orm.interfaces">sqlalchemy.orm.interfaces</a>
- &#8226;   <a href="#sqlalchemy.orm.util">sqlalchemy.orm.util</a>
- &#8226;   <a href="#sqlalchemy.sql">sqlalchemy.sql</a>
- &#8226;   <a href="#sqlalchemy.sql._typing">sqlalchemy.sql._typing</a>
- &#8226;   <a href="#sqlalchemy.sql.elements">sqlalchemy.sql.elements</a>
- &#8226;   <a href="#sqlalchemy.sql.operators">sqlalchemy.sql.operators</a>
- &#8226;   <a href="#sqlalchemy.sql.roles">sqlalchemy.sql.roles</a>
- &#8226;   <a href="#sqlalchemy.util">sqlalchemy.util</a>
- &#8226;   <a href="#sqlalchemy.util.typing">sqlalchemy.util.typing</a>
- &#8226;   <a href="#typing">typing</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#app.models">app.models</a>
-
-  </div>
-
-</div>
-
-<div class="node">
   <a name="sqlalchemy.future"></a>
   <a target="code" href="///T:/DESARROLLO/VCODE/netinv_app/.venv/Lib/site-packages/sqlalchemy/future/__init__.py" type="text/plain"><tt>sqlalchemy.future</tt></a>
 <span class="moduletype">Package</span>  <div class="import">
@@ -26537,7 +26481,6 @@ imported by:
  &#8226;   <a href="#sqlalchemy">sqlalchemy</a>
  &#8226;   <a href="#sqlalchemy.ext.asyncio.session">sqlalchemy.ext.asyncio.session</a>
  &#8226;   <a href="#sqlalchemy.ext.baked">sqlalchemy.ext.baked</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.orm">sqlalchemy.orm</a>
  &#8226;   <a href="#sqlalchemy.orm._orm_constructors">sqlalchemy.orm._orm_constructors</a>
  &#8226;   <a href="#sqlalchemy.orm._typing">sqlalchemy.orm._typing</a>
@@ -26721,8 +26664,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
- &#8226;   <a href="#sqlalchemy.orm">sqlalchemy.orm</a>
+    <a href="#sqlalchemy.orm">sqlalchemy.orm</a>
  &#8226;   <a href="#sqlalchemy.orm._typing">sqlalchemy.orm._typing</a>
  &#8226;   <a href="#sqlalchemy.orm.base">sqlalchemy.orm.base</a>
  &#8226;   <a href="#sqlalchemy.orm.bulk_persistence">sqlalchemy.orm.bulk_persistence</a>
@@ -27456,7 +27398,6 @@ imports:
 imported by:
     <a href="#sqlalchemy.ext.asyncio.scoping">sqlalchemy.ext.asyncio.scoping</a>
  &#8226;   <a href="#sqlalchemy.ext.asyncio.session">sqlalchemy.ext.asyncio.session</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.orm">sqlalchemy.orm</a>
  &#8226;   <a href="#sqlalchemy.orm._orm_constructors">sqlalchemy.orm._orm_constructors</a>
  &#8226;   <a href="#sqlalchemy.orm._typing">sqlalchemy.orm._typing</a>
@@ -28325,8 +28266,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
- &#8226;   <a href="#sqlalchemy.orm">sqlalchemy.orm</a>
+    <a href="#sqlalchemy.orm">sqlalchemy.orm</a>
  &#8226;   <a href="#sqlalchemy.orm._orm_constructors">sqlalchemy.orm._orm_constructors</a>
  &#8226;   <a href="#sqlalchemy.orm._typing">sqlalchemy.orm._typing</a>
  &#8226;   <a href="#sqlalchemy.orm.attributes">sqlalchemy.orm.attributes</a>
@@ -28628,7 +28568,6 @@ imported by:
  &#8226;   <a href="#sqlalchemy.engine.row">sqlalchemy.engine.row</a>
  &#8226;   <a href="#sqlalchemy.ext.baked">sqlalchemy.ext.baked</a>
  &#8226;   <a href="#sqlalchemy.ext.compiler">sqlalchemy.ext.compiler</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.orm._orm_constructors">sqlalchemy.orm._orm_constructors</a>
  &#8226;   <a href="#sqlalchemy.orm._typing">sqlalchemy.orm._typing</a>
  &#8226;   <a href="#sqlalchemy.orm.attributes">sqlalchemy.orm.attributes</a>
@@ -28846,7 +28785,6 @@ imported by:
  &#8226;   <a href="#sqlalchemy.engine.default">sqlalchemy.engine.default</a>
  &#8226;   <a href="#sqlalchemy.ext.asyncio.engine">sqlalchemy.ext.asyncio.engine</a>
  &#8226;   <a href="#sqlalchemy.ext.asyncio.session">sqlalchemy.ext.asyncio.session</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.orm._orm_constructors">sqlalchemy.orm._orm_constructors</a>
  &#8226;   <a href="#sqlalchemy.orm._typing">sqlalchemy.orm._typing</a>
  &#8226;   <a href="#sqlalchemy.orm.attributes">sqlalchemy.orm.attributes</a>
@@ -29425,7 +29363,6 @@ imported by:
  &#8226;   <a href="#sqlalchemy.exc">sqlalchemy.exc</a>
  &#8226;   <a href="#sqlalchemy.ext.asyncio.scoping">sqlalchemy.ext.asyncio.scoping</a>
  &#8226;   <a href="#sqlalchemy.ext.asyncio.session">sqlalchemy.ext.asyncio.session</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.orm._orm_constructors">sqlalchemy.orm._orm_constructors</a>
  &#8226;   <a href="#sqlalchemy.orm._typing">sqlalchemy.orm._typing</a>
  &#8226;   <a href="#sqlalchemy.orm.attributes">sqlalchemy.orm.attributes</a>
@@ -29699,7 +29636,6 @@ imported by:
  &#8226;   <a href="#sqlalchemy.dialects.postgresql.ranges">sqlalchemy.dialects.postgresql.ranges</a>
  &#8226;   <a href="#sqlalchemy.dialects.postgresql.types">sqlalchemy.dialects.postgresql.types</a>
  &#8226;   <a href="#sqlalchemy.engine.reflection">sqlalchemy.engine.reflection</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.orm.attributes">sqlalchemy.orm.attributes</a>
  &#8226;   <a href="#sqlalchemy.orm.base">sqlalchemy.orm.base</a>
  &#8226;   <a href="#sqlalchemy.orm.descriptor_props">sqlalchemy.orm.descriptor_props</a>
@@ -29755,7 +29691,6 @@ imported by:
  &#8226;   <a href="#sqlalchemy.dialects.postgresql.named_types">sqlalchemy.dialects.postgresql.named_types</a>
  &#8226;   <a href="#sqlalchemy.dialects.sqlite.base">sqlalchemy.dialects.sqlite.base</a>
  &#8226;   <a href="#sqlalchemy.dialects.sqlite.dml">sqlalchemy.dialects.sqlite.dml</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.orm._typing">sqlalchemy.orm._typing</a>
  &#8226;   <a href="#sqlalchemy.orm.attributes">sqlalchemy.orm.attributes</a>
  &#8226;   <a href="#sqlalchemy.orm.base">sqlalchemy.orm.base</a>
@@ -30377,7 +30312,6 @@ imported by:
  &#8226;   <a href="#sqlalchemy.ext.asyncio.scoping">sqlalchemy.ext.asyncio.scoping</a>
  &#8226;   <a href="#sqlalchemy.ext.asyncio.session">sqlalchemy.ext.asyncio.session</a>
  &#8226;   <a href="#sqlalchemy.ext.baked">sqlalchemy.ext.baked</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.log">sqlalchemy.log</a>
  &#8226;   <a href="#sqlalchemy.orm">sqlalchemy.orm</a>
  &#8226;   <a href="#sqlalchemy.orm._orm_constructors">sqlalchemy.orm._orm_constructors</a>
@@ -30849,7 +30783,6 @@ imported by:
  &#8226;   <a href="#sqlalchemy.ext.asyncio.engine">sqlalchemy.ext.asyncio.engine</a>
  &#8226;   <a href="#sqlalchemy.ext.asyncio.result">sqlalchemy.ext.asyncio.result</a>
  &#8226;   <a href="#sqlalchemy.ext.asyncio.session">sqlalchemy.ext.asyncio.session</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.inspection">sqlalchemy.inspection</a>
  &#8226;   <a href="#sqlalchemy.log">sqlalchemy.log</a>
  &#8226;   <a href="#sqlalchemy.orm._orm_constructors">sqlalchemy.orm._orm_constructors</a>
@@ -32594,7 +32527,6 @@ imported by:
  &#8226;   <a href="#sqlalchemy.ext.asyncio.scoping">sqlalchemy.ext.asyncio.scoping</a>
  &#8226;   <a href="#sqlalchemy.ext.asyncio.session">sqlalchemy.ext.asyncio.session</a>
  &#8226;   <a href="#sqlalchemy.ext.compiler">sqlalchemy.ext.compiler</a>
- &#8226;   <a href="#sqlalchemy.ext.hybrid">sqlalchemy.ext.hybrid</a>
  &#8226;   <a href="#sqlalchemy.inspection">sqlalchemy.inspection</a>
  &#8226;   <a href="#sqlalchemy.log">sqlalchemy.log</a>
  &#8226;   <a href="#sqlalchemy.orm">sqlalchemy.orm</a>
