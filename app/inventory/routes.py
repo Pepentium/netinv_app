@@ -176,3 +176,73 @@ def delete_device(device_id):
         flash(f"No se pudo eliminar el dispositivo: {str(e)}", "danger")
 
     return redirect(url_for("inventory.device_list"))
+
+from flask import Blueprint, render_template, request, make_response
+import csv
+from io import StringIO
+from app.models import Device, Rack, Location, Model
+from app import db
+from flask_login import login_required
+
+@inventory_bp.route("/download/csv")
+@login_required
+def download_csv():
+    # Obtener los filtros de la solicitud GET
+    building = request.args.get('building')
+    dev_type = request.args.get('type')
+    status = request.args.get('status')
+
+    # Base de consulta SQL
+    query = (
+        db.session.query(
+            Device,
+            Location.loc_building_name,
+            Location.loc_detail,
+            Rack.rck_name,
+            Model.mdl_name,
+            Model.mdl_manufacturer,
+        )
+        .join(Rack, Device.rck_id == Rack.rck_id)
+        .join(Location, Rack.loc_id == Location.loc_id)
+        .join(Model, Device.mdl_id == Model.mdl_id)
+    )
+
+    # Aplicar filtros a la consulta si se proporcionan
+    if building:
+        query = query.filter(Location.loc_building_name == building)
+    if dev_type:
+        query = query.filter(Device.dev_type == dev_type)
+    if status:
+        query = query.filter(Device.dev_status == status)
+
+    # Ejecutar la consulta y obtener los dispositivos filtrados
+    devices = query.all()
+
+    # Crear el contenido del CSV usando StringIO
+    output = StringIO()
+    writer = csv.writer(output)
+
+    # Escribir encabezados en el CSV
+    writer.writerow(['IP', 'Serial', 'Tipo', 'Modelo', 'Ubicación', 'Rack', 'Estado'])
+
+    # Escribir los datos de los dispositivos en el CSV
+    for device, building_name, loc_detail, rack_name, model_name, manufacturer in devices:
+        writer.writerow([
+            device.dev_ip_address,
+            device.dev_serial_number,
+            device.dev_type,
+            f"{manufacturer} {model_name}",
+            f"{building_name} - {loc_detail}",
+            rack_name,
+            device.dev_status
+        ])
+
+    # Preparar la respuesta para la descarga del CSV
+    response = make_response(output.getvalue())
+    response.headers["Content-Disposition"] = "attachment; filename=dispositivos.csv"
+    response.headers["Content-Type"] = "text/csv"
+    
+    # Cerrando el StringIO
+    output.close()
+
+    return response
