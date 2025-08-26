@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,47 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {% block css %}{% endblock %}
+    <!-- Incluir particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        /* Asegura que el html y body ocupen el 100% de la altura */
+        html,
+        body {
+            height: auto;
+            margin: auto;
+        }
+
+        /* Estilo para el contenedor de partículas */
+        #particles-js {
+            position: fixed;
+            /* Usa fixed para que permanezca estático con el desplazamiento */
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            /* Asegura que esté detrás del contenido principal */
+        }
+
+        /* Estilos necesarios para el layout y el contenido principal */
+        .layout {
+            position: relative;
+            /* Relación para permitir el posicionamiento del contenido principal */
+            z-index: 1;
+            /* Asegura que el contenido esté sobre el fondo de partículas */
+        }
+
+        .main-content {
+            position: relative;
+            /* Para mantener la jerarquía de z-index */
+            z-index: 2;
+            /* Asegura que el contenido esté en frente de las partículas */
+        }
+    </style>
 </head>
 
 <body>
+    <div id="particles-js"></div> <!-- Contenedor para partículas -->
     {% if show_sidebar is not defined or show_sidebar %}
     <!-- Botón de menú (Hamburger) - Visible solo en móviles -->
     <button class="sidebar-toggle">
@@ -46,7 +85,7 @@
                 </ul>
             </nav>
 
-            <div class="sidebar-footer">
+            <div class="nav-item">
                 {% if current_user.is_authenticated %}
                 <a href="{{ url_for('auth.logout') }}" class="logout-btn">
                     <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>
@@ -72,6 +111,7 @@
         </div> <!-- Cierre de main-content -->
     </div> <!-- Cierre de layout -->
     {% endif %}
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const sidebar = document.querySelector('.sidebar');
@@ -87,7 +127,7 @@
             sidebarToggle.addEventListener('click', function () {
                 sidebar.classList.toggle('collapsed');
 
-                // Opcional: Deshabilitar scroll del body cuando el sidebar está abierto
+                // Deshabilitar scroll del body cuando el sidebar está abierto
                 document.body.style.overflow = sidebar.classList.contains('collapsed') ? 'auto' : 'hidden';
             });
 
@@ -119,6 +159,117 @@
                     sidebar.classList.add('collapsed');
                 }
             });
+        });
+
+        // Inicialización de particles.js con configuración directamente en el script
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 255,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    },
+                    "image": {
+                        "src": "img/github.svg",
+                        "width": 100,
+                        "height": 100
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 2.5
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"

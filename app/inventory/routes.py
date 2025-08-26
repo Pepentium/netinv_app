@@ -66,7 +66,7 @@ def device_list():
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
 
     # Obtener listas únicas para los filtros dinámicos
-    buildings = ["EDIFICIO1", "EDIFICIO2", "EDIFICIO3", "EDIFICIO4", "EDIFICIO5"]
+    buildings = ["EDIFICIO1", "EDIFICIO2", "EDIFICIO3", "EDIFICIO4", "EDIFICIO5", "EDIFICIO-EXT"]
     types = [t[0] for t in db.session.query(Device.dev_type).distinct().order_by(Device.dev_type).all()]
     statuses = [s[0] for s in db.session.query(Device.dev_status).distinct().order_by(Device.dev_status).all()]
 
@@ -139,7 +139,7 @@ def add_device():
 
     # GET request
     available_ips = get_available_ips()
-    buildings = ["EDIFICIO1", "EDIFICIO2", "EDIFICIO3", "EDIFICIO4", "EDIFICIO5"]
+    buildings = ["EDIFICIO1", "EDIFICIO2", "EDIFICIO3", "EDIFICIO4", "EDIFICIO5", "EDIFICIO-EXT"]
     existing_models = Model.query.all()
 
     return render_template(

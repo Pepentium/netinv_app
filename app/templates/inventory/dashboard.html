@@ -3,7 +3,7 @@
 {% block title %}Dashboard - NetInv{% endblock %}
 
 {% block content %}
-<h2 class="dashboard-title">Resumen del Inventario</h2>
+<h2 class="dashboard-title">RESUMEN DE INVENTARIO</h2>
 
 <!-- Gráfico general centrado y por encima del grid -->
 <div class="chart-wrapper">
@@ -17,7 +17,7 @@
 </div>
 
 <div class="stats-grid">
-    <div class="stat-card total">
+    <div class="stat-card total" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
         <h3>Dispositivos Totales</h3>
         <p class="stat-value">{{ summary.total_devices }}</p>
     </div>
